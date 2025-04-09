@@ -1,0 +1,12 @@
+Combat aircraft Low observables, https://www.youtube.com/watch?v=kXTFjTX-2_Y, https://drive.google.com/file/d/1yFopHmH-CdXM0dln9mpHti67RLt1OXLm/view?usp=drive_link
+Dynamic stability video, https://www.youtube.com/watch?v=HmFEadTXWXo, none
+Missile Defence, https://www.youtube.com/watch?v=MLEuPgIcv5U, none
+Aircraft Design Weight Estimation, https://www.youtube.com/watch?v=AT5SqZbaofc, none
+Aircraft Design Constraint Diagram, https://www.youtube.com/watch?v=oERjOqerp7g, none
+Equilibrium stability Control 1, https://www.youtube.com/watch?v=zoX4U44QAgg, none
+Equilibrium stability control 2, https://www.youtube.com/watch?v=-4gToYfiq-U, none
+MDO Part 1, https://www.youtube.com/watch?v=bSyl2PF99ZY, none
+Goal Seek & solver demo, https://www.youtube.com/watch?v=UKkfE1DN5QI, none
+Launch Vehicle Basics Part 1, https://www.youtube.com/watch?v=xjj0rlrjSy8, none
+Wing BM SF Schrenk method, https://www.youtube.com/watch?v=pkyhC1OCzGE, none
+Chandrayaan orbit Maneuvers, https://www.youtube.com/watch?v=f-n82wXyLCE, none
