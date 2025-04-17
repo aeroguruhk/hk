@@ -14,82 +14,126 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentImageIndex = 0;
     
     // Open lightbox
-    galleryItems.forEach((item, index) => {
-        item.addEventListener('click', () => {
-            const img = item.querySelector('img');
-            const caption = item.querySelector('.gallery-caption');
-            
-            currentImageIndex = index;
-            updateLightboxContent(img.src, caption.textContent);
-            lightbox.classList.add('active');
+    if (galleryItems.length > 0) {
+        galleryItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                const img = item.querySelector('img');
+                const caption = item.querySelector('.gallery-caption');
+                
+                currentImageIndex = index;
+                updateLightboxContent(img.src, caption.textContent);
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when lightbox is open
+            });
         });
-    });
-    
-    // Update lightbox content
-    function updateLightboxContent(src, caption) {
-        lightboxImage.src = src;
-        lightboxCaption.textContent = caption;
-    }
-    
-    // Navigate to previous image
-    lightboxPrev.addEventListener('click', () => {
-        currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
-        const img = galleryItems[currentImageIndex].querySelector('img');
-        const caption = galleryItems[currentImageIndex].querySelector('.gallery-caption');
-        updateLightboxContent(img.src, caption.textContent);
-    });
-    
-    // Navigate to next image
-    lightboxNext.addEventListener('click', () => {
-        currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
-        const img = galleryItems[currentImageIndex].querySelector('img');
-        const caption = galleryItems[currentImageIndex].querySelector('.gallery-caption');
-        updateLightboxContent(img.src, caption.textContent);
-    });
-    
-    // Close lightbox
-    lightboxClose.addEventListener('click', () => {
-        lightbox.classList.remove('active');
-    });
-    
-    // Close lightbox when clicking outside the image
-    lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-            lightbox.classList.remove('active');
-        }
-    });
-    
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('active')) return;
         
-        if (e.key === 'Escape') {
-            lightbox.classList.remove('active');
-        } else if (e.key === 'ArrowLeft') {
-            lightboxPrev.click();
-        } else if (e.key === 'ArrowRight') {
-            lightboxNext.click();
+        // Update lightbox content
+        function updateLightboxContent(src, caption) {
+            lightboxImage.src = src;
+            lightboxCaption.textContent = caption;
         }
-    });
+        
+        // Navigate to previous image
+        lightboxPrev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
+            const img = galleryItems[currentImageIndex].querySelector('img');
+            const caption = galleryItems[currentImageIndex].querySelector('.gallery-caption');
+            updateLightboxContent(img.src, caption.textContent);
+        });
+        
+        // Navigate to next image
+        lightboxNext.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
+            const img = galleryItems[currentImageIndex].querySelector('img');
+            const caption = galleryItems[currentImageIndex].querySelector('.gallery-caption');
+            updateLightboxContent(img.src, caption.textContent);
+        });
+        
+        // Close lightbox
+        lightboxClose.addEventListener('click', (e) => {
+            e.stopPropagation();
+            lightbox.classList.remove('active');
+            document.body.style.overflow = ''; // Re-enable scrolling
+        });
+        
+        // Close lightbox when clicking outside the image
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = ''; // Re-enable scrolling
+            }
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+            
+            if (e.key === 'Escape') {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = ''; // Re-enable scrolling
+            } else if (e.key === 'ArrowLeft') {
+                lightboxPrev.click();
+            } else if (e.key === 'ArrowRight') {
+                lightboxNext.click();
+            }
+        });
+    }
     
     // Handle contact form submission
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        const submitButton = contactForm.querySelector('[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+        
+        contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Get form values
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
+            // Simple validation
+            const name = contactForm.querySelector('[name="name"]')?.value.trim();
+            const email = contactForm.querySelector('[name="email"]')?.value.trim();
+            const message = contactForm.querySelector('[name="message"]')?.value.trim();
             
-            // Here you can add code to handle the form submission
-            // For example, sending data to a server
-            console.log('Form submitted:', { name, email, subject, message });
+            if (!name || !email || !message) {
+                alert('Please fill in all fields');
+                return;
+            }
             
-            // Clear form
-            contactForm.reset();
-            alert('Thank you for your message! We will get back to you soon.');
+            // Email validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            try {
+                // Update button state
+                submitButton.textContent = 'Sending...';
+                submitButton.disabled = true;
+                
+                const formData = new FormData(this);
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    // Clear form
+                    contactForm.reset();
+                    alert('Thank you for your message! We will get back to you soon.');
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Sorry, there was an error sending your message. Please try again later.');
+            } finally {
+                // Reset button state
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
+            }
         });
     }
 
@@ -98,25 +142,86 @@ document.addEventListener('DOMContentLoaded', function() {
         const lessonList = document.getElementById('lesson-list');
         let videos = [];
 
-        fetch('links.txt')
-            .then(response => response.text())
+        // Add loading indicator
+        videoGrid.innerHTML = '<div class="loading">Loading videos...</div>';
+
+        // Set up AbortController for timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+        fetch('links.txt', { signal: controller.signal })
+            .then(response => {
+                clearTimeout(timeoutId);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch video links');
+                }
+                return response.text();
+            })
             .then(data => {
                 videos = data.split('\n')
                     .filter(line => line.trim() !== '')
                     .map(line => {
-                        const [title, youtubeUrl, pdfUrl] = line.split(', ');
-                        const videoId = youtubeUrl.split('v=')[1] || youtubeUrl.split('/').pop();
-                        const cleanPdfUrl = pdfUrl ? pdfUrl.trim().toLowerCase() : '';
-                        return { title, videoId, pdfUrl: (cleanPdfUrl === 'none' || cleanPdfUrl === 'no_pdf' || cleanPdfUrl === '') ? null : pdfUrl };
-                    });
+                        try {
+                            const parts = line.split(', ').map(item => item.trim());
+                            if (parts.length < 2) {
+                                throw new Error('Invalid line format');
+                            }
+                            
+                            const title = parts[0];
+                            const youtubeUrl = parts[1];
+                            const pdfUrl = parts[2] && parts[2].toLowerCase() !== 'none' ? parts[2] : null;
+                            let videoId = '';
+                            
+                            // Extract video ID from different YouTube URL formats
+                            try {
+                                const url = youtubeUrl.trim();
+                                if (url.includes('youtu.be/')) {
+                                    videoId = url.split('youtu.be/')[1].split(/[?&]/)[0];
+                                } else if (url.includes('youtube.com/watch')) {
+                                    const urlObj = new URL(url);
+                                    videoId = urlObj.searchParams.get('v');
+                                } else if (url.includes('youtube.com/embed/')) {
+                                    videoId = url.split('embed/')[1].split(/[?&]/)[0];
+                                } else if (url.includes('youtube.com/v/')) {
+                                    videoId = url.split('v/')[1].split(/[?&]/)[0];
+                                } else if (url.match(/^[a-zA-Z0-9_-]{11}$/)) {
+                                    // If it's just a video ID
+                                    videoId = url;
+                                }
+                                
+                                if (!videoId) {
+                                    throw new Error(`Could not extract video ID from URL: ${url}`);
+                                }
+                            } catch (error) {
+                                console.error('Error parsing YouTube URL:', youtubeUrl, error);
+                                videoId = '';
+                            }
+
+                            return {
+                                title,
+                                videoId,
+                                pdfUrl
+                            };
+                        } catch (error) {
+                            console.error('Error parsing line:', line, error);
+                            return null;
+                        }
+                    })
+                    .filter(video => video !== null && video.videoId); // Filter out null entries and videos without ID
 
                 // Populate sidebar with lesson names
-                lessonList.innerHTML = videos.map((video, index) => `
-                    <li data-index="${index}">${video.title}</li>
-                `).join('');
+                if (videos.length === 0) {
+                    lessonList.innerHTML = '<li class="no-lessons">No videos available</li>';
+                    videoGrid.innerHTML = '<p class="no-videos">No videos available.</p>';
+                    return;
+                }
+
+                lessonList.innerHTML = videos.map((video, index) => 
+                    `<li data-index="${index}" class="lesson-item${index === 0 ? ' active' : ''}">${video.title}</li>`
+                ).join('');
 
                 // Add click event listeners to lesson items
-                const lessonItems = lessonList.querySelectorAll('li');
+                const lessonItems = lessonList.querySelectorAll('.lesson-item');
                 lessonItems.forEach(item => {
                     item.addEventListener('click', () => {
                         // Remove active class from all items
@@ -127,20 +232,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         const index = parseInt(item.dataset.index);
                         const video = videos[index];
 
-                        // Display selected video
+                        // Display selected video with responsive container
                         videoGrid.innerHTML = `
-                            <div class="video-placeholder">
-                                <h4>${video.title}</h4>
-                                <iframe width="100%" height="100%" 
-                                    src="https://www.youtube.com/embed/${video.videoId}" 
-                                    frameborder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                    allowfullscreen>
-                                </iframe>
+                            <div class="video-wrapper">
+                                <div class="video-title">
+                                    <h3>${video.title}</h3>
+                                </div>
+                                <div class="video-responsive">
+                                    <iframe
+                                        src="https://www.youtube.com/embed/${video.videoId}"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
                                 ${video.pdfUrl ? `
                                 <div class="pdf-download">
                                     <a href="${video.pdfUrl}" target="_blank" class="pdf-button">
-                                        <img src="pdf-icon.svg" alt="PDF" style="width: 20px; height: 20px; margin-right: 5px;">
+                                        <span class="pdf-icon">📄</span>
                                         Download Study Material
                                     </a>
                                 </div>` : ''}
@@ -155,8 +264,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
+                clearTimeout(timeoutId);
                 console.error('Error loading videos:', error);
-                videoGrid.innerHTML = '<p>Error loading videos. Please try again later.</p>';
+                videoGrid.innerHTML = `
+                    <div class="error-message">
+                        <p>Error loading videos. Please try again later.</p>
+                        ${error.message ? `<p class="error-details">${error.message}</p>` : ''}
+                    </div>
+                `;
+                lessonList.innerHTML = '<li class="error-item">Failed to load lessons</li>';
             });
     }
 });
