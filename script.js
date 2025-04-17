@@ -2,6 +2,76 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.querySelector('.contact-form form');
     const videoGrid = document.querySelector('.video-grid');
     
+    // Gallery lightbox functionality
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const lightbox = document.querySelector('.lightbox');
+    const lightboxImage = document.querySelector('.lightbox-image');
+    const lightboxCaption = document.querySelector('.lightbox-caption');
+    const lightboxClose = document.querySelector('.lightbox-close');
+    const lightboxPrev = document.querySelector('.lightbox-prev');
+    const lightboxNext = document.querySelector('.lightbox-next');
+    
+    let currentImageIndex = 0;
+    
+    // Open lightbox
+    galleryItems.forEach((item, index) => {
+        item.addEventListener('click', () => {
+            const img = item.querySelector('img');
+            const caption = item.querySelector('.gallery-caption');
+            
+            currentImageIndex = index;
+            updateLightboxContent(img.src, caption.textContent);
+            lightbox.classList.add('active');
+        });
+    });
+    
+    // Update lightbox content
+    function updateLightboxContent(src, caption) {
+        lightboxImage.src = src;
+        lightboxCaption.textContent = caption;
+    }
+    
+    // Navigate to previous image
+    lightboxPrev.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
+        const img = galleryItems[currentImageIndex].querySelector('img');
+        const caption = galleryItems[currentImageIndex].querySelector('.gallery-caption');
+        updateLightboxContent(img.src, caption.textContent);
+    });
+    
+    // Navigate to next image
+    lightboxNext.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
+        const img = galleryItems[currentImageIndex].querySelector('img');
+        const caption = galleryItems[currentImageIndex].querySelector('.gallery-caption');
+        updateLightboxContent(img.src, caption.textContent);
+    });
+    
+    // Close lightbox
+    lightboxClose.addEventListener('click', () => {
+        lightbox.classList.remove('active');
+    });
+    
+    // Close lightbox when clicking outside the image
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            lightbox.classList.remove('active');
+        }
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        
+        if (e.key === 'Escape') {
+            lightbox.classList.remove('active');
+        } else if (e.key === 'ArrowLeft') {
+            lightboxPrev.click();
+        } else if (e.key === 'ArrowRight') {
+            lightboxNext.click();
+        }
+    });
+    
     // Handle contact form submission
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
