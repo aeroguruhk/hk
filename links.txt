@@ -8,5 +8,5 @@ Equilibrium stability control 2, https://youtu.be/3YwOIHZv_Zk?si=kgpdeiSBW8sXuvZ
 MDO Part 1, https://youtu.be/rC3vo6AfzQw?si=BA83s1SLiN6VWItO, none
 Goal Seek & solver demo, https://www.youtube.com/watch?v=UKkfE1DN5QI, none
 Launch Vehicle Basics Part 1, https://www.youtube.com/watch?v=xjj0rlrjSy8, none
-Wing BM SF Schrenk method, https://www.youtube.com/watch?v=pkyhC1OCzGE, none
+Wing BM SF Schrenk method, https://www.youtube.com/watch?v=pkyhC1OCzGE, https://docs.google.com/spreadsheets/d/1XON1uFHgFB4JbsnXsYCUjrYQ4FU_tcoE/edit?gid=636171005#gid=636171005
 Chandrayaan orbit Maneuvers, https://www.youtube.com/watch?v=f-n82wXyLCE, none
