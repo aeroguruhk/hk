@@ -1,0 +1,1 @@
+I am a retired teacher and have created a few  videos lectures, some spreadsheets and other artefacts which I feel my be useful to Aerospace students. I intend to add more videos depending on feedback. 
