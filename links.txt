@@ -11,4 +11,5 @@ Launch Vehicle Basics Part 1, https://www.youtube.com/watch?v=xjj0rlrjSy8, none
 Wing BM SF Schrenk method, https://www.youtube.com/watch?v=pkyhC1OCzGE, https://docs.google.com/spreadsheets/d/1XON1uFHgFB4JbsnXsYCUjrYQ4FU_tcoE/edit?gid=636171005#gid=636171005
 Chandrayaan orbit Maneuvers, https://www.youtube.com/watch?v=f-n82wXyLCE, none
 Hypersonic Flow Part1, https://www.youtube.com/watch?v=FxAk2Wlk_fo, none
-Design for high angle of Attack,https://www.youtube.com/watch?v=xWYRkMW42_k, none
+Design for high angle of Attack,https://youtu.be/xWYRkMW42_k, none
+
