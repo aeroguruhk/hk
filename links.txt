@@ -13,4 +13,6 @@ Chandrayaan orbit Maneuvers, https://www.youtube.com/watch?v=f-n82wXyLCE, none
 Hypersonic Flow Part1, https://www.youtube.com/watch?v=FxAk2Wlk_fo, none
 Design for high angle of Attack,https://youtu.be/xWYRkMW42_k, none
 Hypersonic Propulsion, https://www.youtube.com/watch?v=Bf6idNhbvic, none
+Cryptography_Part1,https://youtu.be/lTQ4A9FM71s, none
+Design for High Angle, https://youtu.be/xWYRkMW42_k, none
 
